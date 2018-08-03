@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'Comfortaa';
+    src: url(./../fonts/Comfortaa-Regular.ttf)
+}
+
+body {
+    font-family: 'Comfortaa';
+
+    text-align: center;
+    max-width: 75vw;
+    height: 100vh - 5vh;
+
+    background-color: #c5e7f9;
+
+    margin: 0 auto;
+    padding: 10vh;
+}
+
+.main {
+    font-size: 3rem;
+    padding: 3rem 0;
+    height: 25vh;
+}
+
+.notes {
+    font-size: 1.25rem;
+    height: 25vh;
+}
+
+.card {
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+    height: 80vh;
+}
+
+.textBox {
+    height: 22.5vh;
+}
