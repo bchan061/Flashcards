@@ -41,8 +41,9 @@ class CardList extends React.Component {
         }
 
         this.skipCard = this.skipCard.bind(this)
+        this.checkAnswer = this.checkAnswer.bind(this)
 
-        this.cardControls = <CardControls onSkip={this.skipCard}/>
+        this.cardControls = <CardControls onSkip={ this.skipCard } onAnswer={ this.checkAnswer }/>
     }
 
     skipCard() {
@@ -51,6 +52,18 @@ class CardList extends React.Component {
                 currentCard: (previousState.currentCard + 1) % previousState.cardList.length
             }
         })
+    }
+
+    checkAnswer(answer) {
+        let currentCardAnswer = this.state.cardList[this.state.currentCard].props.answer
+
+        console.log(currentCardAnswer + " vs. " + answer.toLowerCase())
+        
+        if (answer.toLowerCase() === currentCardAnswer.toLowerCase()) {
+            console.log("Correct")
+        } else {
+            console.log("wrong")
+        }
     }
 
     render() {

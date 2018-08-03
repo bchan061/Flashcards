@@ -8,31 +8,66 @@ body {
 
     text-align: center;
     max-width: 75vw;
-    height: 100vh - 5vh;
+    height: 100vh - 2.5vh;
 
     background-color: #c5e7f9;
 
     margin: 0 auto;
-    padding: 10vh;
+    padding: 5vh;
 }
 
 .main {
-    font-size: 3rem;
-    padding: 3rem 0;
-    height: 25vh;
+    font-size: 3em;
+    padding: 1em 0;
 }
 
 .notes {
-    font-size: 1.25rem;
-    height: 25vh;
+    font-size: 1.25em;
 }
 
 .card {
     background-color: #f9f9f9;
-    border-radius: 0.5rem;
-    height: 80vh;
+    border-radius: 0.5em;
+    height: 90vh;
+
+    position: relative;
 }
 
 .textBox {
-    height: 22.5vh;
+    font-family: 'Comfortaa';
+    font-size: 2em;
+
+    left: 0;
+    bottom: 0;
+    margin: 0.25em;
+    padding: 0.5em;
+    position: absolute;
+
+    max-width: 70%;
+    width: 70%;
+}
+
+.submitButton {
+    display: none;
+}
+
+.skipButton {
+    font-family: 'Comfortaa';
+    font-size: 2em;
+
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: 0.25em;
+    padding: 0.5em;
+
+    max-width: 20%;
+}
+
+.controls {
+    margin: 0 auto;
+    width: 100%;
+    bottom: 0;
+
+    position: absolute;
 }
