@@ -1,4 +1,4 @@
-const items = [
+const defaultItems = [
     {
         id: 1,
         question: 'Test Question 1',
@@ -22,11 +22,13 @@ const items = [
     },
     {
         id: 4,
-        question: "Recent polls have shown a fifth of Americans can't locate the U. S. on a world map.  Why do you think this is?",
+        question: "Recent polls have shown a fifth of Americans can't locate the U.S. on a world map.  Why do you think this is?",
         questionNotes: '',
         answer: "I personally believe that U.S. Americans are unable to do so because, uh, some people out there in our nation don't have maps and, uh, I believe that our education, like such as in South Africa and, uh, the Iraq, everywhere like such as, and I believe that they should—our education over here in the U. S. should help the U. S., uh, or, should help South Africa and should help the Iraq, and the Asian countries, so we will be able to build up our future, for our children.",
         answerNotes: ''
     }
 ]
 
-export default items
+const jlptItems = require('./jlptn5data.json')
+
+export default jlptItems

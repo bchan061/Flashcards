@@ -17,6 +17,7 @@ class CardControls extends React.Component {
 
         this.submitAnswer = this.submitAnswer.bind(this)
         this.onTextChange = this.onTextChange.bind(this)
+        this.clearText = this.clearText.bind(this)
     }
 
     onTextChange(event) {
@@ -24,6 +25,14 @@ class CardControls extends React.Component {
         this.setState(function(previousState, properties) {
             return {
                 text
+            }
+        })
+    }
+
+    clearText() {
+        this.setState(function(previousState, properties) {
+            return {
+                text: ''
             }
         })
     }
@@ -41,7 +50,8 @@ class CardControls extends React.Component {
                             type="text"
                             className="textBox"
                             onChange={ this.onTextChange }
-                            placeholder="Enter the answer..." />
+                            placeholder="Enter the answer..."
+                            value={ this.state.text }/>
                         <input type="submit" className="submitButton"/>
                         <input type="button" className="skipButton" value="Skip" onClick={this.props.onSkip} />
                 </form>

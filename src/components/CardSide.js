@@ -1,4 +1,6 @@
 import React from 'react'
+import './../utilities/FontUtilities'
+import FontUtilities from './../utilities/FontUtilities';
 
 /**
  * A side of the card.
@@ -9,10 +11,20 @@ import React from 'react'
  *   - notes: accompanying notes for the main property
  */
 class CardSide extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.returnFontStyle = this.returnFontStyle.bind(this)
+    }
+
+    returnFontStyle() {
+        return FontUtilities.returnFontStyle(this.props.main, 2, 3.5, 10, 125)
+    }
+
     render() {
         return (
             <div className="cardSide">
-                <div className="main">
+                <div className="main" style={ this.returnFontStyle() }>
                     { this.props.main }
                 </div>
                 <div className="notes">

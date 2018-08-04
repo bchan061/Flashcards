@@ -23,10 +23,25 @@ class CardList extends React.Component {
             cardList: []
         }
 
+        this.skipCard = this.skipCard.bind(this)
+        this.checkAnswer = this.checkAnswer.bind(this)
+        this.constructCardList = this.constructCardList.bind(this)
+
+        this.state.cardList = this.constructCardList()
+
+        this.cardControlsRef = React.createRef()
+        this.cardControls = <CardControls
+                                onSkip={ this.skipCard }
+                                onAnswer={ this.checkAnswer }
+                                ref={ this.cardControlsRef } 
+                            />
+    }
+
+    constructCardList() {
         if (this.props.data) {
-            let cardList = []
+            let newCardList = []
             this.props.data.forEach(function(child) {
-                cardList.push(
+                newCardList.push(
                     <Card
                         id={ child.id }
                         key={ child.key }
@@ -37,13 +52,8 @@ class CardList extends React.Component {
                     />
                 )
             })
-            this.state.cardList = cardList
+            return newCardList
         }
-
-        this.skipCard = this.skipCard.bind(this)
-        this.checkAnswer = this.checkAnswer.bind(this)
-
-        this.cardControls = <CardControls onSkip={ this.skipCard } onAnswer={ this.checkAnswer }/>
     }
 
     skipCard() {
@@ -61,8 +71,10 @@ class CardList extends React.Component {
         
         if (answer.toLowerCase() === currentCardAnswer.toLowerCase()) {
             console.log("Correct")
+            this.skipCard()
         } else {
             console.log("wrong")
+            this.cardControlsRef.current.clearText()
         }
     }
 

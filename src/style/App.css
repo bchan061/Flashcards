@@ -17,6 +17,7 @@ body {
 }
 
 .main {
+    /* Overriden by dynamic sizing in CardSide.js */
     font-size: 3em;
     padding: 1em 0;
 }
