@@ -1,4 +1,13 @@
 class FontUtilities {
+    /**
+     * Returns a font style with the font size according to the length of the text.
+     * @param {string} text the text
+     * @param {number} minFontSize the smallest font size to show
+     * @param {number} maxFontSize the largest font size to show
+     * @param {number} minFontLength the smallest font length needed to start scaling
+     * @param {number} maxFontLength the largest font length to scale
+     * @param {string} unit the unit for scaling ("em" by default)
+     */
     static returnFontStyle(text, minFontSize, maxFontSize, minFontLength, maxFontLength, unit = 'em') {
         let fontStyle = {}
         

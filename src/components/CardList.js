@@ -1,6 +1,9 @@
 import React from 'react'
 import Card from './Card'
 import CardControls from './CardControls'
+import './../utilities/RandomUtilities'
+import RandomUtilities from './../utilities/RandomUtilities'
+import StringUtilities from './../utilities/StringUtilities'
 
 /**
  * A list of cards.
@@ -24,8 +27,10 @@ class CardList extends React.Component {
         }
 
         this.skipCard = this.skipCard.bind(this)
+        this.nextCard = this.nextCard.bind(this)
         this.checkAnswer = this.checkAnswer.bind(this)
         this.constructCardList = this.constructCardList.bind(this)
+        this.shuffleCardList = this.shuffleCardList.bind(this)
 
         this.state.cardList = this.constructCardList()
 
@@ -35,6 +40,8 @@ class CardList extends React.Component {
                                 onAnswer={ this.checkAnswer }
                                 ref={ this.cardControlsRef } 
                             />
+
+        this.shuffleCardList()
     }
 
     constructCardList() {
@@ -56,7 +63,22 @@ class CardList extends React.Component {
         }
     }
 
+    shuffleCardList() {
+        let cardList = this.state.cardList
+        RandomUtilities.shuffleList(cardList)
+
+        this.setState(function(previousState, parameters) {
+            return {
+                cardList
+            }
+        })
+    }
+
     skipCard() {
+        this.nextCard()
+    }
+
+    nextCard() {
         this.setState(function(previousState, properties) {
             return {
                 currentCard: (previousState.currentCard + 1) % previousState.cardList.length
@@ -66,17 +88,16 @@ class CardList extends React.Component {
 
     checkAnswer(answer) {
         let currentCardAnswer = this.state.cardList[this.state.currentCard].props.answer
-
-        console.log(currentCardAnswer + " vs. " + answer.toLowerCase())
         
-        if (answer.toLowerCase() === currentCardAnswer.toLowerCase()) {
-            console.log("Correct")
+        if (StringUtilities.uniformizeString(currentCardAnswer) === StringUtilities.uniformizeString(answer)) {
             this.skipCard()
+            this.cardControlsRef.current.clearText()
         } else {
-            console.log("wrong")
             this.cardControlsRef.current.clearText()
         }
     }
+
+
 
     render() {
         return (
