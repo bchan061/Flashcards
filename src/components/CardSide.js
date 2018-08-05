@@ -18,7 +18,7 @@ class CardSide extends React.Component {
     }
 
     returnFontStyle() {
-        return FontUtilities.returnFontStyle(this.props.main, 2, 5, 10, 125)
+        return FontUtilities.returnFontStyle(this.props.main, 5, 15, 10, 125, "vmin")
     }
 
     render() {
@@ -27,9 +27,12 @@ class CardSide extends React.Component {
                 <div className="main" style={ this.returnFontStyle() }>
                     { this.props.main }
                 </div>
-                <div className="notes">
-                    { this.props.notes }
-                </div>
+                {
+                    this.props.notes &&
+                    (<div className="notes">
+                        { this.props.notes }
+                    </div>)
+                }
             </div>
         )
     }

@@ -23,16 +23,21 @@ class CardList extends React.Component {
 
         this.state = {
             currentCard: 0,
-            cardList: []
+            cardIDList: [],
+            showAnswer: false
         }
+
+        for (let i = 0; i < this.props.data['items'].length; i++) {
+            this.state.cardIDList.push(i)
+        } 
 
         this.skipCard = this.skipCard.bind(this)
         this.nextCard = this.nextCard.bind(this)
         this.checkAnswer = this.checkAnswer.bind(this)
-        this.constructCardList = this.constructCardList.bind(this)
         this.shuffleCardList = this.shuffleCardList.bind(this)
-
-        this.state.cardList = this.constructCardList()
+        this.flipCard = this.flipCard.bind(this)
+        this.getCurrentCardID = this.getCurrentCardID.bind(this)
+        this.getCurrentCardData = this.getCurrentCardData.bind(this)
 
         this.cardControlsRef = React.createRef()
         this.cardControls = <CardControls
@@ -44,34 +49,22 @@ class CardList extends React.Component {
         this.shuffleCardList()
     }
 
-    constructCardList() {
-        if (this.props.data) {
-            let newCardList = []
-            this.props.data.forEach(function(child) {
-                newCardList.push(
-                    <Card
-                        id={ child.id }
-                        key={ child.key }
-                        question={ child.question }
-                        questionNotes={ child.questionNotes }
-                        answer={ child.answer }
-                        answerNotes={ child.answerNotes }
-                    />
-                )
-            })
-            return newCardList
-        }
-    }
-
     shuffleCardList() {
-        let cardList = this.state.cardList
-        RandomUtilities.shuffleList(cardList)
+        RandomUtilities.shuffleList(this.state.cardIDList)
 
-        this.setState(function(previousState, parameters) {
+        this.setState(function(previousState, properties) {
             return {
-                cardList
+                cardList: this.state.cardList
             }
         })
+    }
+
+    getCurrentCardID() {
+        return this.state.cardIDList[this.state.currentCard]
+    }
+    
+    getCurrentCardData() {
+        return this.props.data['items'][this.getCurrentCardID()]
     }
 
     skipCard() {
@@ -81,29 +74,46 @@ class CardList extends React.Component {
     nextCard() {
         this.setState(function(previousState, properties) {
             return {
-                currentCard: (previousState.currentCard + 1) % previousState.cardList.length
+                showAnswer: false,
+                currentCard: (previousState.currentCard + 1) % previousState.cardIDList.length
+            }
+        })
+    }
+
+    flipCard() {
+        this.setState(function(previousState, properties) {
+            return {
+                showAnswer: !previousState.showAnswer
             }
         })
     }
 
     checkAnswer(answer) {
-        let currentCardAnswer = this.state.cardList[this.state.currentCard].props.answer
+        let currentCardAnswer = this.getCurrentCardData().answer
         
         if (StringUtilities.uniformizeString(currentCardAnswer) === StringUtilities.uniformizeString(answer)) {
             this.skipCard()
             this.cardControlsRef.current.clearText()
         } else {
+            if (!this.state.showAnswer) {
+                this.flipCard()
+            }
             this.cardControlsRef.current.clearText()
         }
     }
 
-
-
     render() {
+        let currentCardData = this.getCurrentCardData()
         return (
             <div className="card">
-                { this.state.cardList[this.state.currentCard] }
-
+                <Card
+                    id={ currentCardData.id }
+                    question={ currentCardData.question }
+                    questionNotes={ currentCardData.questionNotes }
+                    answer={ currentCardData.answer }
+                    answerNotes={ currentCardData.answerNotes }
+                    flipped={ this.state.showAnswer }
+                />
                 { this.cardControls }
             </div>
         )

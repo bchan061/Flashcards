@@ -52,8 +52,10 @@ class CardControls extends React.Component {
                             onChange={ this.onTextChange }
                             placeholder="Enter the answer..."
                             value={ this.state.text }/>
-                        <input type="submit" className="submitButton"/>
-                        <input type="button" className="skipButton" value="Skip" onClick={this.props.onSkip} />
+                        <input type="submit" className="doNotDisplay"/>
+                        <a href="#" className="button skipButton" onClick={this.props.onSkip}>
+                            Skip
+                        </a>
                 </form>
             </div>
         )

@@ -10,18 +10,11 @@ import CardSide from './CardSide'
  *   - questionNotes: accompanying notes for the question
  *   - answer: the answer of the card
  *   - answerNotes: accompanying notes for the answer
+ *   - flipped: whether the card is flipped or not
  */
 class Card extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            flipped: false
-        }
-    }
-
     render() {
-        if (!this.state.flipped) {
+        if (!this.props.flipped) {
             return (
                 <CardSide cardSideClass="question" main={ this.props.question } notes={ this.props.questionNotes } />
             )
