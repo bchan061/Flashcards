@@ -40,11 +40,6 @@ class CardList extends React.Component {
         this.getCurrentCardData = this.getCurrentCardData.bind(this)
 
         this.cardControlsRef = React.createRef()
-        this.cardControls = <CardControls
-                                onSkip={ this.skipCard }
-                                onAnswer={ this.checkAnswer }
-                                ref={ this.cardControlsRef } 
-                            />
 
         this.shuffleCardList()
     }
@@ -114,7 +109,11 @@ class CardList extends React.Component {
                     answerNotes={ currentCardData.answerNotes }
                     flipped={ this.state.showAnswer }
                 />
-                { this.cardControls }
+                <CardControls
+                    onSkip={ this.skipCard }
+                    onAnswer={ this.checkAnswer }
+                    ref={ this.cardControlsRef } 
+                />
             </div>
         )
     }

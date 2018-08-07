@@ -6,7 +6,7 @@ import './style/App.css'
 class App extends React.Component {
     render() {
         return (
-            <CardList data={TestData} />
+            <CardList data={TestData}/>
         )
     }
 }

@@ -18,7 +18,8 @@ class CardSide extends React.Component {
     }
 
     returnFontStyle() {
-        return FontUtilities.returnFontStyle(this.props.main, 5, 15, 10, 125, "vmin")
+        /* Some magic numbers here */
+        return FontUtilities.returnFontStyle(this.props.main, 5, 10, 5, 100, "vmin")
     }
 
     render() {
