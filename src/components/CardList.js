@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from './Card'
 import CardControls from './CardControls'
+import CardProgress from './CardProgress'
 import './../utilities/RandomUtilities'
 import RandomUtilities from './../utilities/RandomUtilities'
 import StringUtilities from './../utilities/StringUtilities'
@@ -24,7 +25,11 @@ class CardList extends React.Component {
         this.state = {
             currentCard: 0,
             cardIDList: [],
-            showAnswer: false
+
+            showAnswer: false,
+
+            correct: 0,
+            incorrect: 0
         }
 
         for (let i = 0; i < this.props.data['items'].length; i++) {
@@ -38,6 +43,8 @@ class CardList extends React.Component {
         this.flipCard = this.flipCard.bind(this)
         this.getCurrentCardID = this.getCurrentCardID.bind(this)
         this.getCurrentCardData = this.getCurrentCardData.bind(this)
+        this.onSuccess = this.onSuccess.bind(this)
+        this.onFailure = this.onFailure.bind(this)
 
         this.cardControlsRef = React.createRef()
 
@@ -63,6 +70,17 @@ class CardList extends React.Component {
     }
 
     skipCard() {
+        if (this.state.showAnswer) {
+            /* Skipped the answer, probably a mistype - decrement the incorrect counter */
+            this.setState(
+                function(previousState, properties) {
+                    return {
+                        incorrect: previousState.incorrect - 1
+                    }
+                }
+            )
+        }
+
         this.nextCard()
     }
 
@@ -87,14 +105,38 @@ class CardList extends React.Component {
         let currentCardAnswer = this.getCurrentCardData().answer
         
         if (StringUtilities.uniformizeString(currentCardAnswer) === StringUtilities.uniformizeString(answer)) {
-            this.skipCard()
-            this.cardControlsRef.current.clearText()
+            this.onSuccess()
         } else {
-            if (!this.state.showAnswer) {
-                this.flipCard()
-            }
-            this.cardControlsRef.current.clearText()
+            this.onFailure()
         }
+    }
+
+    onSuccess() {
+        this.nextCard()
+        this.cardControlsRef.current.clearText()
+        if (!this.state.showAnswer) {
+            this.setState(
+                function(previousState, properties) {
+                    return {
+                        correct: previousState.correct + 1
+                    }
+                }
+            )
+        }
+    }
+
+    onFailure() {
+        if (!this.state.showAnswer) {
+            this.flipCard()
+            this.setState(
+                function(previousState, properties) {
+                    return {
+                        incorrect: previousState.incorrect + 1
+                    }
+                }
+            )
+        }
+        this.cardControlsRef.current.clearText()
     }
 
     render() {
@@ -108,6 +150,10 @@ class CardList extends React.Component {
                     answer={ currentCardData.answer }
                     answerNotes={ currentCardData.answerNotes }
                     flipped={ this.state.showAnswer }
+                />
+                <CardProgress 
+                    correct={ this.state.correct }
+                    incorrect={ this.state.incorrect }
                 />
                 <CardControls
                     onSkip={ this.skipCard }
