@@ -31,7 +31,7 @@ const defaultItems = {
     ]
 }
 
-// const jlptItems = require('./jlptn5data.json')
-const spongebobEpisodes = require('./spongebobepisodes.json')
+const jlptItems = require('./jlptn5data.json')
+// const spongebobEpisodes = require('./spongebobepisodes.json')
 
-export default spongebobEpisodes
+export default jlptItems

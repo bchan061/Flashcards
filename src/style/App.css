@@ -56,6 +56,16 @@ html, body, #root {
     display: none;
 }
 
+.middleControls {
+    margin: 1rem auto;
+    width: 100%;
+
+    bottom: 0;
+    position: absolute;
+
+    clear: both;
+}
+
 .textBox {
     font-family: 'Comfortaa';
     font-size: 3.5vmin;
@@ -72,14 +82,18 @@ html, body, #root {
     margin: 0 0.5em;
 }
 
-.controls {
-    margin: 1rem auto;
-    width: 100%;
+.optionsBox {
+    font-size: 1.5vmin;
 
+    right: 0;
     bottom: 0;
+    margin: 0.5em;
     position: absolute;
+}
 
-    clear: both;
+.swapBox {
+    size: 1.5vmin;
+    padding: 0.5em 1em;
 }
 
 .cardProgress {

@@ -26,7 +26,9 @@ class CardList extends React.Component {
             currentCard: 0,
             cardIDList: [],
 
-            showAnswer: false,
+            showOtherSide: false,
+            swapQuestionWithAnswer: false,
+            showNotes: true,
 
             correct: 0,
             incorrect: 0
@@ -45,6 +47,8 @@ class CardList extends React.Component {
         this.getCurrentCardData = this.getCurrentCardData.bind(this)
         this.onSuccess = this.onSuccess.bind(this)
         this.onFailure = this.onFailure.bind(this)
+        this.onSwapBoxCheck = this.onSwapBoxCheck.bind(this)
+        this.onNotesBoxCheck = this.onNotesBoxCheck.bind(this)
 
         this.cardControlsRef = React.createRef()
 
@@ -66,11 +70,11 @@ class CardList extends React.Component {
     }
     
     getCurrentCardData() {
-        return this.props.data['items'][this.getCurrentCardID()]
+        return this.props.data.items[this.getCurrentCardID()]
     }
 
     skipCard() {
-        if (this.state.showAnswer) {
+        if (this.state.showOtherSide) {
             /* Skipped the answer, probably a mistype - decrement the incorrect counter */
             this.setState(
                 function(previousState, properties) {
@@ -87,7 +91,7 @@ class CardList extends React.Component {
     nextCard() {
         this.setState(function(previousState, properties) {
             return {
-                showAnswer: false,
+                showOtherSide: false,
                 currentCard: (previousState.currentCard + 1) % previousState.cardIDList.length
             }
         })
@@ -96,13 +100,16 @@ class CardList extends React.Component {
     flipCard() {
         this.setState(function(previousState, properties) {
             return {
-                showAnswer: !previousState.showAnswer
+                showOtherSide: !previousState.showAnswer
             }
         })
     }
 
     checkAnswer(answer) {
         let currentCardAnswer = this.getCurrentCardData().answer
+        if (this.state.swapQuestionWithAnswer) {
+            currentCardAnswer = this.getCurrentCardData().question
+        }
         
         if (StringUtilities.uniformizeString(currentCardAnswer) === StringUtilities.uniformizeString(answer)) {
             this.onSuccess()
@@ -114,7 +121,7 @@ class CardList extends React.Component {
     onSuccess() {
         this.nextCard()
         this.cardControlsRef.current.clearText()
-        if (!this.state.showAnswer) {
+        if (!this.state.showOtherSide) {
             this.setState(
                 function(previousState, properties) {
                     return {
@@ -126,7 +133,7 @@ class CardList extends React.Component {
     }
 
     onFailure() {
-        if (!this.state.showAnswer) {
+        if (!this.state.showOtherSide) {
             this.flipCard()
             this.setState(
                 function(previousState, properties) {
@@ -139,17 +146,50 @@ class CardList extends React.Component {
         this.cardControlsRef.current.clearText()
     }
 
+    onSwapBoxCheck(isChecked) {
+        this.setState(
+            function (previousState, properties) {
+                return {
+                    swapQuestionWithAnswer: isChecked
+                }
+            }
+        )
+    }
+
+    onNotesBoxCheck(isChecked) {
+        this.setState(
+            function (previousState, properties) {
+                return {
+                    showNotes: isChecked
+                }
+            }
+        )
+    }
+
     render() {
         let currentCardData = this.getCurrentCardData()
+        /* Swap the question and answer if specified in the state */
+        let adjustedCardData = {
+            question: (!this.state.swapQuestionWithAnswer) ? currentCardData.question : currentCardData.answer,
+            questionNotes: (!this.state.swapQuestionWithAnswer) ? currentCardData.questionNotes : currentCardData.answerNotes,
+            answer: (!this.state.swapQuestionWithAnswer) ? currentCardData.answer : currentCardData.question,
+            answerNotes: (!this.state.swapQuestionWithAnswer) ? currentCardData.answerNotes : currentCardData.questionNotes
+        }
+
+        if (!this.state.showNotes) {
+            adjustedCardData.questionNotes = ''
+            adjustedCardData.answerNotes = ''
+        }
+
         return (
             <div className="card">
                 <Card
                     id={ currentCardData.id }
-                    question={ currentCardData.question }
-                    questionNotes={ currentCardData.questionNotes }
-                    answer={ currentCardData.answer }
-                    answerNotes={ currentCardData.answerNotes }
-                    flipped={ this.state.showAnswer }
+                    question={ adjustedCardData.question }
+                    questionNotes={ adjustedCardData.questionNotes }
+                    answer={ adjustedCardData.answer }
+                    answerNotes={ adjustedCardData.answerNotes }
+                    flipped={ this.state.showOtherSide }
                 />
                 <CardProgress 
                     correct={ this.state.correct }
@@ -158,6 +198,10 @@ class CardList extends React.Component {
                 <CardControls
                     onSkip={ this.skipCard }
                     onAnswer={ this.checkAnswer }
+                    onSwapCheck={ this.onSwapBoxCheck }
+                    onNotesCheck={ this.onNotesBoxCheck }
+                    showNotes={ this.state.showNotes }
+                    swapQuestionWithAnswer={ this.state.swapQuestionWithAnswer }
                     ref={ this.cardControlsRef } 
                 />
             </div>

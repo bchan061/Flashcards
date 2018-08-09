@@ -6,6 +6,10 @@ import React from 'react'
  * Required properties:
  *   - onSkip: a method to be called when skipping
  *   - onAnswer: a method to be called when answering
+ *   - onSwapCheck: a method to be called when checking the "swap" box
+ *   - onNotesCheck: a method to be called when checking the "notes" box
+ *   - swapQuestionWithAnswer: whether the question and answer are swapped or not
+ *   - showNotes: whether the notes are shown or not
  */
 class CardControls extends React.Component {
     constructor(props) {
@@ -18,6 +22,8 @@ class CardControls extends React.Component {
         this.submitAnswer = this.submitAnswer.bind(this)
         this.onTextChange = this.onTextChange.bind(this)
         this.clearText = this.clearText.bind(this)
+        this.swapCheckboxChanged = this.swapCheckboxChanged.bind(this)
+        this.notesCheckboxChanged = this.notesCheckboxChanged.bind(this)
     }
 
     onTextChange(event) {
@@ -42,18 +48,47 @@ class CardControls extends React.Component {
         this.props.onAnswer(this.state.text)
     }
 
+    swapCheckboxChanged(event) {
+        this.props.onSwapCheck(event.target.checked)
+    }
+
+    notesCheckboxChanged(event) {
+        this.props.onNotesCheck(event.target.checked)
+    }
+
     render() {
         return (
             <div className="controls">
                 <form onSubmit={ this.submitAnswer }>
-                        <input 
-                            type="text"
-                            className="textBox"
-                            onChange={ this.onTextChange }
-                            placeholder="Answer"
-                            value={ this.state.text }/>
-                        <input type="submit" className="doNotDisplay"/>
-                        <input type="button" value="Skip" className="skipButton" onClick={this.props.onSkip}/>
+                        <div className="middleControls">
+                            <input 
+                                type="text"
+                                className="textBox"
+                                onChange={ this.onTextChange }
+                                placeholder="Answer"
+                                value={ this.state.text }/>
+                            <input type="submit" className="doNotDisplay"/>
+                            <input type="button" value="Skip" className="skipButton" onClick={ this.props.onSkip }/>
+                        </div>
+                        <div className="optionsBox">
+                            <label >
+                                <input
+                                    type="checkbox"
+                                    className="swapBox"
+                                    checked={ this.props.swapQuestionWithAnswer }
+                                    onChange={ this.swapCheckboxChanged }/>
+                                    Swap
+                            </label>
+                            <br/>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    className="swapBox"
+                                    checked={ this.props.showNotes }
+                                    onChange={ this.notesCheckboxChanged }/>
+                                    Show Notes
+                            </label>
+                        </div>
                 </form>
             </div>
         )
