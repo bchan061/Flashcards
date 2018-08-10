@@ -40,6 +40,7 @@ html, body, #root {
 .card {
     background-color: #f9f9f9;
     border-radius: 0.25em;
+    box-shadow: -1em -1em #fbfbfb16;
 
     margin: 2rem auto;
     padding: 2rem;
@@ -62,6 +63,7 @@ html, body, #root {
 
     bottom: 0;
     position: absolute;
+    text-align: center;
 
     clear: both;
 }
@@ -78,8 +80,17 @@ html, body, #root {
     font-family: 'Comfortaa';
     font-size: 3.5vmin;
     padding: 0.5em 1em;
-
+    
     margin: 0 0.5em;
+}
+
+.undoButton {
+    font-family: 'Comfortaa';
+    font-size: 1.75vmin;
+    padding: 0.25em 0.75em;
+    
+    margin: 0 0.25em;
+    margin-right: 2em;
 }
 
 .optionsBox {

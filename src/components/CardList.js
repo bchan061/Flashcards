@@ -2,6 +2,7 @@ import React from 'react'
 import Card from './Card'
 import CardControls from './CardControls'
 import CardProgress from './CardProgress'
+import CardHistory from './CardHistory'
 import './../utilities/RandomUtilities'
 import RandomUtilities from './../utilities/RandomUtilities'
 import StringUtilities from './../utilities/StringUtilities'
@@ -34,6 +35,8 @@ class CardList extends React.Component {
             incorrect: 0
         }
 
+        this.cardHistory = new CardHistory()
+
         for (let i = 0; i < this.props.data['items'].length; i++) {
             this.state.cardIDList.push(i)
         } 
@@ -43,6 +46,7 @@ class CardList extends React.Component {
         this.checkAnswer = this.checkAnswer.bind(this)
         this.shuffleCardList = this.shuffleCardList.bind(this)
         this.flipCard = this.flipCard.bind(this)
+        this.undoCard = this.undoCard.bind(this)
         this.getCurrentCardID = this.getCurrentCardID.bind(this)
         this.getCurrentCardData = this.getCurrentCardData.bind(this)
         this.onSuccess = this.onSuccess.bind(this)
@@ -75,17 +79,18 @@ class CardList extends React.Component {
 
     skipCard() {
         if (this.state.showOtherSide) {
-            /* Skipped the answer, probably a mistype - decrement the incorrect counter */
+            /* Skipped the answer, probably a mistype - decrement the incorrect counter, mark as correct */
             this.setState(
                 function(previousState, properties) {
                     return {
-                        incorrect: previousState.incorrect - 1
+                        incorrect: previousState.incorrect - 1,
+                        correct: previousState.correct + 1
                     }
                 }
             )
         }
-
         this.nextCard()
+        this.cardHistory.push(!this.state.showOtherSide, this.state.showOtherSide)
     }
 
     nextCard() {
@@ -95,6 +100,28 @@ class CardList extends React.Component {
                 currentCard: (previousState.currentCard + 1) % previousState.cardIDList.length
             }
         })
+    }
+
+    undoCard() {
+        if (this.cardHistory.hasItem()) {
+            let previousCard = this.cardHistory.pop()
+            let correctDifference = (previousCard.success ? -1 : 0)
+            let incorrectDifference = (previousCard.success ? 0 : -1)
+            if (previousCard.skipped) {
+                correctDifference = 0
+                incorrectDifference = 0
+            }
+            this.setState(
+                function(previousState, properties) {
+                    return {
+                        correct: previousState.correct + correctDifference,
+                        incorrect: previousState.incorrect + incorrectDifference,
+                        currentCard: (previousState.currentCard - 1) % previousState.cardIDList.length,
+                        showOtherSide: false
+                    }
+                }
+            )
+        }
     }
 
     flipCard() {
@@ -119,7 +146,7 @@ class CardList extends React.Component {
     }
 
     onSuccess() {
-        this.nextCard()
+        this.cardHistory.push(false, !this.state.showOtherSide)
         this.cardControlsRef.current.clearText()
         if (!this.state.showOtherSide) {
             this.setState(
@@ -130,6 +157,7 @@ class CardList extends React.Component {
                 }
             )
         }
+        this.nextCard()
     }
 
     onFailure() {
@@ -202,6 +230,8 @@ class CardList extends React.Component {
                     onNotesCheck={ this.onNotesBoxCheck }
                     showNotes={ this.state.showNotes }
                     swapQuestionWithAnswer={ this.state.swapQuestionWithAnswer }
+                    canUndo={ !this.cardHistory.hasItem() }
+                    onUndo={ this.undoCard }
                     ref={ this.cardControlsRef } 
                 />
             </div>

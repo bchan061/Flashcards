@@ -10,6 +10,8 @@ import React from 'react'
  *   - onNotesCheck: a method to be called when checking the "notes" box
  *   - swapQuestionWithAnswer: whether the question and answer are swapped or not
  *   - showNotes: whether the notes are shown or not
+ *   - canUndo: whether the undo button is active or not
+ *   - onUndo: a method to be called when clicking on "undo"
  */
 class CardControls extends React.Component {
     constructor(props) {
@@ -61,6 +63,12 @@ class CardControls extends React.Component {
             <div className="controls">
                 <form onSubmit={ this.submitAnswer }>
                         <div className="middleControls">
+                            <input
+                                type="button"
+                                value="Undo"
+                                className="undoButton"
+                                disabled={ this.props.canUndo }
+                                onClick={ this.props.onUndo }/>
                             <input 
                                 type="text"
                                 className="textBox"
